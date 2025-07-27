@@ -7,6 +7,14 @@ const { authenticateToken } = require('../middleware/auth.cjs');
 const router = express.Router();
 const prisma = new PrismaClient();
 
+// 测试端点 - 确认代码已更新
+router.get('/test-update', (req, res) => {
+  res.json({ 
+    message: 'Auth route updated with user status check',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // 用户注册
 router.post('/register', async (req, res) => {
   try {
@@ -118,17 +126,24 @@ router.post('/login', async (req, res) => {
         password: true,
         bio: true,
         role: true,
+        status: true,
         storageUsed: true,
         storageLimit: true,
         createdAt: true
       }
     });
 
-    console.log('User found:', user ? { id: user.id, email: user.email, passwordHash: user.password } : 'No user found');
+    console.log('User found:', user ? { id: user.id, email: user.email, status: user.status, passwordHash: user.password } : 'No user found');
 
     if (!user) {
       console.log('Login failed: User not found');
       return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    // 检查用户状态
+    if (user.status !== 'ACTIVE') {
+      console.log('Login failed: User account is suspended');
+      return res.status(403).json({ error: 'Your account has been suspended. Please contact support.' });
     }
 
     // 验证密码

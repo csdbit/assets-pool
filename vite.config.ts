@@ -32,6 +32,10 @@ export default defineConfig(({ mode }) => {
       port: parseInt(env.VITE_PORT || '5173'),
       strictPort: false, // 如果端口被占用，尝试下一个可用端口
       host: true, // 监听所有地址
+      allowedHosts: [
+        'localhost',
+        '127.0.0.1',
+      ]
     }
   }
 })

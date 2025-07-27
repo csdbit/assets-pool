@@ -23,6 +23,7 @@ const authenticateToken = async (req, res, next) => {
         username: true,
         bio: true,
         role: true,
+        status: true,
         storageUsed: true,
         storageLimit: true,
         createdAt: true
@@ -31,6 +32,11 @@ const authenticateToken = async (req, res, next) => {
 
     if (!user) {
       return res.status(401).json({ error: 'User not found' });
+    }
+
+    // 检查用户状态
+    if (user.status !== 'ACTIVE') {
+      return res.status(403).json({ error: 'Your account has been suspended. Please contact support.' });
     }
 
     // Convert BigInt to string for JSON serialization

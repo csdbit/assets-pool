@@ -129,8 +129,9 @@ pnpm check               # TypeScript 类型检查
 pnpm lint                # ESLint 代码检查
 
 # 数据库
-npx prisma studio        # 打开 Prisma Studio GUI
-npx prisma migrate dev   # 创建新的数据库迁移
+npx prisma generate
+npx prisma migrate dev
+npx prisma db seed
 ```
 
 ## API 端点
