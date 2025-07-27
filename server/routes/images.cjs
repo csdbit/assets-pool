@@ -83,11 +83,11 @@ router.get('/', authenticateToken, async (req, res) => {
     const formattedImages = images.map(image => ({
       ...image,
       size: image.size.toString(),
-      url: `http://localhost:${process.env.PORT || 3001}${image.url}`,
+      url: `${process.env.SERVER_URL || `http://localhost:${process.env.PORT || 3001}`}${image.url}`,
       versions: image.versions.map(v => ({
         ...v,
         size: v.size.toString(),
-        url: `http://localhost:${process.env.PORT || 3001}${v.url}`
+        url: `${process.env.SERVER_URL || `http://localhost:${process.env.PORT || 3001}`}${v.url}`
       }))
     }));
 
@@ -270,11 +270,11 @@ router.post('/upload', authenticateToken, upload.single('image'), async (req, re
       image: {
         ...image,
         size: image.size.toString(),
-        url: `http://localhost:${process.env.PORT || 3001}${image.url}`,
+        url: `${process.env.SERVER_URL || `http://localhost:${process.env.PORT || 3001}`}${image.url}`,
         versions: image.versions.map(v => ({
           ...v,
           size: v.size.toString(),
-          url: `http://localhost:${process.env.PORT || 3001}${v.url}`
+          url: `${process.env.SERVER_URL || `http://localhost:${process.env.PORT || 3001}`}${v.url}`
         }))
       }
     });
@@ -333,11 +333,11 @@ router.get('/:id', authenticateToken, async (req, res) => {
     res.json({
       ...image,
       size: image.size.toString(),
-      url: `http://localhost:${process.env.PORT || 3001}${image.url}`,
+      url: `${process.env.SERVER_URL || `http://localhost:${process.env.PORT || 3001}`}${image.url}`,
       versions: image.versions.map(v => ({
         ...v,
         size: v.size.toString(),
-        url: `http://localhost:${process.env.PORT || 3001}${v.url}`
+        url: `${process.env.SERVER_URL || `http://localhost:${process.env.PORT || 3001}`}${v.url}`
       }))
     });
   } catch (error) {
@@ -538,7 +538,7 @@ router.put('/:id/hide', authenticateToken, async (req, res) => {
         versions: updatedImage.versions.map(v => ({
           ...v,
           size: v.size.toString(),
-          url: `http://localhost:${process.env.PORT || 3001}${v.url}`
+          url: `${process.env.SERVER_URL || `http://localhost:${process.env.PORT || 3001}`}${v.url}`
         }))
       }
     });
@@ -607,11 +607,11 @@ router.get('/admin', authenticateToken, requireAdmin, async (req, res) => {
     const formattedImages = images.map(image => ({
       ...image,
       size: image.size.toString(),
-      url: `http://localhost:${process.env.PORT || 3001}${image.url}`,
+      url: `${process.env.SERVER_URL || `http://localhost:${process.env.PORT || 3001}`}${image.url}`,
       versions: image.versions.map(v => ({
         ...v,
         size: v.size.toString(),
-        url: `http://localhost:${process.env.PORT || 3001}${v.url}`
+        url: `${process.env.SERVER_URL || `http://localhost:${process.env.PORT || 3001}`}${v.url}`
       }))
     }));
 

@@ -95,6 +95,7 @@ JWT_EXPIRES_IN="7d"
 # Server
 PORT=3001
 NODE_ENV=development
+SERVER_URL="http://localhost:3001"  # Used for generating image URLs
 
 # CORS (comma-separated for multiple origins)
 ALLOWED_ORIGINS="http://localhost:5173,http://localhost:5174"
