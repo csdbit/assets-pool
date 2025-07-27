@@ -1,0 +1,129 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  username     String     @unique
+  password     String
+  bio          String?    @db.Text
+  role         Role       @default(USER)
+  status       UserStatus @default(ACTIVE)
+  storageUsed  BigInt     @default(0)
+  storageLimit BigInt     @default(1073741824)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  images       Image[]
+  shares       Share[]
+
+  @@map("users")
+}
+
+model Image {
+  id           String         @id @default(cuid())
+  title        String?
+  filename     String
+  originalName String
+  mimeType     String
+  size         BigInt
+  width        Int?
+  height       Int?
+  url          String
+  thumbnailUrl String?
+  description  String?
+  isPublic     Boolean        @default(false)
+  uploadedAt   DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  userId       String
+  tags         ImageTag[]
+  versions     ImageVersion[]
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shares       Share[]
+
+  @@index([userId], map: "images_userId_fkey")
+  @@map("images")
+}
+
+model ImageVersion {
+  id        String      @id @default(cuid())
+  filename  String
+  size      BigInt
+  url       String
+  type      VersionType
+  width     Int
+  height    Int
+  createdAt DateTime    @default(now())
+  imageId   String
+  image     Image       @relation(fields: [imageId], references: [id], onDelete: Cascade)
+
+  @@index([imageId], map: "image_versions_imageId_fkey")
+  @@map("image_versions")
+}
+
+model Tag {
+  id     String     @id @default(cuid())
+  name   String     @unique
+  images ImageTag[]
+
+  @@map("tags")
+}
+
+model ImageTag {
+  imageId String
+  tagId   String
+  image   Image  @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  tag     Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([imageId, tagId])
+  @@index([tagId], map: "image_tags_tagId_fkey")
+  @@map("image_tags")
+}
+
+model Share {
+  id        String    @id @default(cuid())
+  token     String    @unique
+  expiresAt DateTime?
+  createdAt DateTime  @default(now())
+  imageId   String
+  userId    String
+  image     Image     @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([imageId], map: "shares_imageId_fkey")
+  @@index([userId], map: "shares_userId_fkey")
+  @@map("shares")
+}
+
+model SystemSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  type      String   @default("string")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("system_settings")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+}
+
+enum VersionType {
+  ORIGINAL
+  LARGE
+  MEDIUM
+  SMALL
+}
